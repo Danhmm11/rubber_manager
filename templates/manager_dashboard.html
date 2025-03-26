@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .dashboard-container {
+            max-width: 100000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: end;
+            gap: 10px;
+        }
+        .nav-tabs .nav-link {
+            cursor: pointer;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Chào Mừng Quản Lý</h1>
+            <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/add_user" class="btn btn-primary">Thêm khách hàng mới</a>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="user-list-tab" onclick="showSection('user-list-section')">Danh sách người dùng</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="transactions-tab" onclick="showSection('transactions-section')">Tất cả giao dịch</a>
+            </li>
+        </ul>
+
+        <!-- User List Section -->
+        <div id="user-list-section" class="mt-4">
+            <h3 class="mt-4">Danh sách người dùng</h3>
+            <div class="table-container">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên đăng nhập</th>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>RFID</th>
+                            
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Vòng lặp để hiển thị dữ liệu người dùng -->
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.user_id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.full_name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.rfid }}</td>
+                            
+                            <td>
+                                <a href="/view_transactions/{{ user.user_id }}" class="btn btn-info btn-sm">Xem chi tiết</a>
+                                <a href="/delete_user/{{ user.user_id }}" 
+                                   class="btn btn-danger btn-sm" 
+                                   onclick="return confirmDelete('{{ user.full_name }}')">Xóa</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Transactions Section -->
+        <div id="transactions-section" class="mt-4 hidden">
+            <h3>Tất cả giao dịch</h3>
+            <div class="table-container">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Tên người dùng</th>
+                            <th>Ngày</th>
+                            <th>Hàm lượng (%)</th>
+                            <th>Khối lượng (tấn)</th>
+                            <th>Giá (VND/tấn)</th>
+                            <th>Thành tiền (VND)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Vòng lặp để hiển thị giao dịch -->
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction['user_name'] }}</td>
+                            <td>{{ transaction['date'] }}</td>
+                            <td>{{ transaction['ham_luong'] }}</td>
+                            <td>{{ transaction['khoi_luong'] }}</td>
+                            <td>{{ transaction['gia'] | format_price_vn }}</td>
+                            <td>{{ transaction['thanh_tien'] | format_price_vn }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('user-list-section').classList.add('hidden');
+            document.getElementById('transactions-section').classList.add('hidden');
+
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Update active tab
+            document.getElementById('user-list-tab').classList.remove('active');
+            document.getElementById('transactions-tab').classList.remove('active');
+
+            if (sectionId === 'user-list-section') {
+                document.getElementById('user-list-tab').classList.add('active');
+            } else {
+                document.getElementById('transactions-tab').classList.add('active');
+            }
+        }
+        function confirmDelete(userName) {
+    return confirm(`Bạn có chắc chắn muốn xóa người dùng: ${userName}? Hành động này không thể hoàn tác!`);
+}
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

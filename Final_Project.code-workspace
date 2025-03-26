@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "UDP",
+			"path": "../TCP_esp/UDP"
+		}
+	],
+	"settings": {}
+}

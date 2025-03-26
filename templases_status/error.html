@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/notification.css">
+    <title>Thông báo lỗi</title>
+
+</head>
+<body>
+    <!-- Thông báo -->
+    
+        <div id="notification" class="notification error">
+       
+        <span class="close-btn" onclick="closeNotification()">×</span>
+        <img src="/error.png" alt="error" >
+        <div class="titleerror">Failed to add user.</div>
+        <div class="message">
+         
+            It seems that the information you entered is incorrect, or the username or phone number already exists. Please try again after a moment.
+        </div>
+    </div>
+
+    <!-- Nút bấm tạo thông báo -->
+    <button onclick="showNotification()">Tạo thông báo</button>
+
+    <script>
+        // Hàm hiển thị thông báo
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+
+            // Tự động ẩn thông báo sau 5 giây
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Hàm đóng thông báo
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

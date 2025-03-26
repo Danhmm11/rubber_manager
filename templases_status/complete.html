@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo lỗi</title>
+    <link rel="stylesheet" href="/notification.css">
+
+</head>
+<body>
+    <!-- Thông báo -->
+    <div id="notification" class="notification success">
+        <span class="close-btn" onclick="closeNotification()">×</span>
+        <img src="/accept.png" alt="Success" >
+        <div class="title">Congratulations! You have successfully added a user</div>
+        <div class="message">
+            You can return to the <a href="#">management</a> page or continue adding more users. 
+             
+        </div>
+    </div>
+
+    <!-- Nút bấm tạo thông báo -->
+    <button onclick="showNotification()">Tạo thông báo</button>
+
+    <script>
+        // Hàm hiển thị thông báo
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+
+            // Tự động ẩn thông báo sau 5 giây
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Hàm đóng thông báo
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
+    
+    <style>
+        body {
+            background-color:  #e3f2fd;;
+        }
+        .dashboard-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #90caf9;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="/static/notification.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1></h1>
+            <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+        </div>
+
+        <h3>Thêm Người Dùng Mới</h3>
+        <div class="form-container">
+            <form method="POST" action="/add_user" id="addUserForm"> 
+                
+                <div class="mb-3">
+                    <label for="username" class="form-label">Tên đăng nhập</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tên đăng nhập" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <div class="mb-3">
+                    <label for="full_name" class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Nhập họ và tên" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Nhập email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+                </div>
+                <div class="mb-3">
+                    <label for="rfid" class="form-label">RFID</label>
+                    <input type="text" class="form-control" id="rfid" name="rfid" placeholder="Nhập mã RFID" required>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Vai trò</label>
+                    <select class="form-select" id="role" name="role" required>
+                        <option value="customer">Khách hàng</option>
+                        <option value="manager">Quản lý</option>
+                        
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Thêm người dùng</button>
+                <a href="/manager_dashboard" class="btn btn-secondary">Quay lại trang Manager</a>
+            </form>
+        </div>
+        
+    </div>
+
+    
+    
+
+    <div id="notification" class="notification success">
+        <span class="close-btn" onclick="closeNotification()">×</span>
+        <img src= "{{ url_for('static', filename='images/accept.png') }}" alt="success" >
+        <div class="titlesussec">Congratulations! You have successfully added a user</div>
+        <div class="message">
+            You can return to the <a href="/manager_dashboard">management</a> page or continue adding more users. 
+        </div>
+    </div>
+    <div id="errorNotification" class="notification error">
+    
+        <span class="close-btn" onclick="closeNotificationerror()">×</span>
+        <img src="{{ url_for('static', filename='images/error.png') }}" alt="error" >
+        <div class="titleerror">Failed to add user.</div>
+        <div class="message">
+        It seems that the information you entered is incorrect, or the username or phone number already exists. Please try again after a moment.
+        </div>
+    </div>
+
+
+   
+    <script>
+
+       
+        // Hàm hiển thị thông báo
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+                       // Tự động ẩn thông báo sau 5 giây
+            setTimeout(() => {
+                notification.style.display = 'none';
+                
+            }, 5000);
+        }
+
+        // Hàm đóng thông báo
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+        function showErrorNotification() {
+            const errorNotification = document.getElementById('errorNotification');
+            errorNotification.style.display = 'block';
+
+            // Tự động ẩn thông báo sau 5 giây
+            setTimeout(() => {
+                errorNotification.style.display = 'none';
+            }, 5000);
+        }
+
+        function closeNotificationerror() {
+            const notification = document.getElementById('errorNotification');
+            notification.style.display = 'none';
+        }
+
+        document.getElementById('addUserForm').addEventListener('submit', async function(event) {
+    event.preventDefault();  // Ngăn chặn tải lại trang mặc định
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();  // Kết quả trả về từ server
+
+        if (response.ok && result.status === 'success') {
+            // Hiển thị thông báo thành công
+            showNotification();
+        } else {
+            // Hiển thị thông báo lỗi
+            showErrorNotification();
+        }
+    } catch (error) {
+        console.error('Lỗi khi gửi dữ liệu:', error);
+        showErrorNotification();
+    }
+});
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

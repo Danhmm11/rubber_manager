@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
+    <style>
+        /* Màu nền xanh lá nhạt */
+        body {
+            background-color: #e8f5e9; /* Xanh lá nhạt */
+            color: #2e7d32; /* Xanh lá tự nhiên đậm */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            cursor: pointer;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #2e7d32; /* Xanh lá tự nhiên */
+            color: white;
+        }
+
+        table {
+            background-color: white;
+        }
+
+        table th {
+            background-color: #388e3c; /* Xanh lá đậm */
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #2e7d32; /* Xanh lá tự nhiên */
+            border-color: #2e7d32;
+        }
+
+        .btn-primary:hover {
+            background-color: #1b5e20; /* Xanh lá đậm hơn khi hover */
+            border-color: #1b5e20;
+        }
+
+        .btn-danger {
+            background-color: #d32f2f; /* Đỏ */
+            border-color: #d32f2f;
+        }
+
+        .btn-danger:hover {
+            background-color: #b71c1c; /* Đỏ đậm */
+            border-color: #b71c1c;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="header">
+            <h1>Customer Dashboard</h1>
+            <a href="/logout" class="btn btn-danger">Đăng xuất</a>
+        </div>
+        <h1>Xin chào, {{ user_info.full_name }}</h1>
+        <p>Email: {{ user_info.email }}</p>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="transaction-tab" onclick="showSection('transaction-section')">Thông tin giao dịch</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="monthly-total-tab" onclick="showSection('monthly-total-section')">Tổng tiền trong tháng</a>
+            </li>
+        </ul>
+
+        <!-- Transaction Section -->
+        <div id="transaction-section" class="mt-4">
+            <h3>Thông tin giao dịch</h3>
+            <form method="POST">
+                <button type="submit" name="reset" class="btn btn-secondary btn-sm">Xóa Lọc</button>
+            </form>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Hàm lượng (%)</th>
+                        <th>Khối lượng (tấn)</th>
+                        <th>Giá (VND/tấn)</th>
+                        <th>Thành tiền (VND)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction['Ngày'] }}</td>
+                        <td>{{ transaction['Hàm lượng (%)'] }}</td>
+                        <td>{{ transaction['Khối lượng (tấn)'] }}</td>
+                        <td>{{ transaction['Giá (VND/tấn)'] |format_price_vn }}</td>
+                        <td>{{ transaction['Thành tiền (VND)'] |format_price_vn }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Monthly Total Section -->
+        <div id="monthly-total-section" class="mt-4 hidden">
+            <h3>Tổng tiền trong tháng</h3>
+            <form method="POST" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="month" class="form-label">Tháng</label>
+                        <input type="number" id="month" name="month" class="form-control" value="{{ month }}" min="1" max="12">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="year" class="form-label">Năm</label>
+                        <input type="number" id="year" name="year" class="form-control" value="{{ year }}">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Xem</button>
+                       
+                    </div>
+                </div>
+            </form>
+          
+            <h4 class="mb-4">Tổng Tiền: {{ total |format_price_vn }} VND</h4>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Hàm lượng (%)</th>
+                        <th>Khối lượng (tấn)</th>
+                        <th>Giá (VND/tấn)</th>
+                        <th>Thành tiền (VND)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction['Ngày'] }}</td>
+                        <td>{{ transaction['Hàm lượng (%)'] }}</td>
+                        <td>{{ transaction['Khối lượng (tấn)'] }}</td>
+                        <td>{{ transaction['Giá (VND/tấn)'] |format_price_vn }}</td>
+                        <td>{{ transaction['Thành tiền (VND)'] |format_price_vn }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('transaction-section').classList.add('hidden');
+            document.getElementById('monthly-total-section').classList.add('hidden');
+
+            // Show the selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Update active tab
+            document.getElementById('transaction-tab').classList.remove('active');
+            document.getElementById('monthly-total-tab').classList.remove('active');
+
+            if (sectionId === 'transaction-section') {
+                document.getElementById('transaction-tab').classList.add('active');
+            } else {
+                document.getElementById('monthly-total-tab').classList.add('active');
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

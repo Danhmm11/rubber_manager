@@ -1,0 +1,98 @@
+/* CSS cho toàn bộ trang */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    height: 100%;
+    background-color: #4c51bf; /* Màu nền tổng thể */
+}
+
+/* Flex container để căn giữa */
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 105vh;
+    background-color: #4c51bf; /* Màu nền của khung */
+}
+
+/* Card đăng nhập */
+.w-full {
+    width: 100%;
+    max-width: 350px; /* Giới hạn độ rộng */
+    margin: auto;
+    background-color: #e5e7eb; /* Nền của card */
+    border-radius: 10px; /* Bo góc */
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+header img {
+    display: block;
+    width: 60px;
+    margin: 0 auto 15px auto;
+}
+
+/* Nhãn và input */
+label {
+    color: #4c51bf;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+input[type="text"], input[type="password"] {
+    display: flex;
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #4c51bf;
+    border-radius: 5px;
+    outline: none;
+    color: #1a202c;
+    font-size: 14px;
+    background-color: #edf2f7; /* Màu nền khi focus */
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    background-color: #cbd5e0;
+    border-color: #2b6cb0;
+}
+
+/* Nút submit */
+input[type="submit"] {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #4c51bf;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #d53f8c; /* Màu khi hover */
+}
+
+/* Footer */
+footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+footer a {
+    font-size: 14px;
+    text-decoration: none;
+    color: #4c51bf;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #d53f8c;
+}

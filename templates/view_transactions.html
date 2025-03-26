@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết giao dịch</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f3f0f9; /* Tím nhạt */
+            color: #4c3d8a; /* Tím đậm */
+            font-family: 'Arial', sans-serif;
+        }
+
+        .dashboard-container {
+            background-color: #ffffff; /* Trắng tinh khiết */
+            border: 1px solid #d3c4f5; /* Viền tím nhạt */
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(76, 61, 138, 0.2); /* Bóng mờ tím */
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background-color: #6f42c1; /* Tím trung tính */
+            border: none;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a36a0; /* Tím đậm hơn khi hover */
+        }
+
+        .table {
+            background-color: #f9f7fd; /* Nền bảng tím nhạt */
+            color: #4c3d8a;
+        }
+
+        .table th {
+            background-color: #6f42c1; /* Tiêu đề bảng tím đậm */
+            color: #fff;
+        }
+
+        .table td {
+            background-color: #f9f7fd; /* Các ô màu tím nhạt */
+        }
+
+        .table tbody tr:hover {
+            background-color: #e9e1f8; /* Hiệu ứng hover ô màu tím sáng */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4 dashboard-container">
+        <h3 class="mb-4 text-center">Chi tiết giao dịch của người dùng</h3>
+        
+        <!-- Nút Quay lại -->
+        <a href="/manager_dashboard" class="btn btn-secondary mb-3">Quay lại trang quản lý</a>
+        
+        <div class="table-container">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Tên người dùng</th>
+                        <th>Ngày</th>
+                        <th>Hàm lượng (%)</th>
+                        <th>Khối lượng (tấn)</th>
+                        <th>Giá (VND/tấn)</th>
+                        <th>Thành tiền (VND)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Vòng lặp để hiển thị giao dịch -->
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction['user_name'] }}</td>
+                        <td>{{ transaction['date'] }}</td>
+                        <td>{{ transaction['ham_luong'] }}</td>
+                        <td>{{ transaction['khoi_luong'] }}</td>
+                        <td>{{ transaction['gia'] | format_price_vn }}</td>
+                        <td>{{ transaction['thanh_tien'] | format_price_vn }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
